@@ -8,14 +8,14 @@ spec:
     processor:
       - type: freemarker
         description: "Adding first label to kubernetes spec-02-dryrun"
-        phase: BASE_DEFINITION
+        phase: POST_FLIGHT
         merge:
           type: overlay
         parameters:
           template: |
             { "metadata" : {
                "labels": {
-                 "overridenLabel-dryrun-02": "initialValue-dryrun-02"
+                 "labelToAdd": "initialValue-dryrun-02"
                }
               }
             }
