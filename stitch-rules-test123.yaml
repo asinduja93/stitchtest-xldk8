@@ -15,7 +15,7 @@ spec:
           template: |
             { "metadata" : {
                "labels": {
-                 "labelToAdd": "initialValue-dryrun-02"
+                 "labelToAdd": "initialValue-dryrun-123"
                }
               }
             }
