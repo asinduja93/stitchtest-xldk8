@@ -1,0 +1,46 @@
+kind: Rules
+metadata:
+  namespace: k8s-freemarker
+spec:
+  - name: "k8s.AddLabelToDeployment"
+    condition:
+      deployedType: k8s.Resources
+      expression: "#input.getStringValue('$.kind') == 'Deployment'"
+    processor:
+      - type: patch
+        description: "Adding label to Deployment document"
+        phase: PATCH
+        merge:
+          type: overlay
+        parameters:
+          patch:
+            - op: add
+              path: "/metadata/labels/kindDeployment"
+              value: ""
+  - name: "k8s.ChangePortForService"
+    condition:
+      deployedType: k8s.Resources
+      expression: "#input.getStringValue('$.kind') == 'Service'"
+      expression: "#input.getIntegerValue('$.spec.ports[0].port') == 8080"
+      expression: "#input.getIntegerValue('$.spec.ports[0].targetPort') == 8080"
+    processor:
+      - type: patch
+        description: "Changing port for service"
+        phase: PATCH
+        merge:
+          type: overlay
+        parameters:
+          patch:
+            - op: replace
+              path: "/spec/ports/0/port"
+              value: 8081
+      - type: patch
+        description: "Changing targetPort for service"
+        phase: PATCH
+        merge:
+          type: overlay
+        parameters:
+          patch:
+            - op: replace
+              path: "/spec/ports/0/targetPort"
+              value: 8081
