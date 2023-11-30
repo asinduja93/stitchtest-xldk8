@@ -2,7 +2,7 @@ kind: Rules
 metadata:
   namespace: k8s-freemarker
 spec:
-  - name: "k8s.AddFreemarkerLabels-02"
+  - name: "k8s.AddFreemarkerLabels-03"
     condition:
       deployedType: k8s.Resources
     processor:
@@ -19,3 +19,20 @@ spec:
                }
               }
             }
+  - name: "k8s.ChangePortForService"
+    condition:
+      deployedType: k8s.Resources
+      expression: "#input.getStringValue('$.kind') == 'Service'"
+      expression: "#input.getIntegerValue('$.spec.ports[0].port') == 8080"
+      expression: "#input.getIntegerValue('$.spec.ports[0].targetPort') == 8080"
+    processor:
+      - type: patch
+        description: "Changing port for service"
+        phase: PATCH
+        merge:
+          type: overlay
+        parameters:
+          patch:
+            - op: replace
+              path: "/spec/ports/0/port"
+              value: 8081
